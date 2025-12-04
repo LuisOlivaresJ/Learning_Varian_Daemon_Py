@@ -1,5 +1,11 @@
 """
-A script to perform a C-FIND query to show how to request specific DICOM tags.
+A script to perform a C-FIND query to show how to request for specific DICOM tags.
+
+Reference:
+Eclipse 18.1 DICOM Conformance Statement
+    Table 4-12: Study Root Request Identifier for Interactive Client Q/R C-FIND SCU
+Pynetdicom Find Service Class User (SCU) Example
+    https://pydicom.github.io/pynetdicom/stable/examples/qr_find.html
 """
 
 import os
@@ -16,7 +22,8 @@ VarianDB_IP = os.getenv("VARIAN_DB_IP")
 VarianDB_PORT = os.getenv("VARIAN_DB_PORT")
 VarianDB_AET = os.getenv("VARIAN_DB_AET")
 
-# Create our Identifier (query) dataset
+# Create our Identifier (query) dataset. In this case, we will query for all studies
+# instancesUID that mathch Patient's Name "QC^IMRT"
 ds = Dataset()
 ds.PatientName = "QC^IMRT"
 ds.QueryRetrieveLevel = "STUDY"
