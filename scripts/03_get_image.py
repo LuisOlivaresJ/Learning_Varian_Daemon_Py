@@ -46,7 +46,7 @@ def get_series_UID(
     return series_UID
 
 
-def get_images_UID(
+def get_image_UIDs(
         patient_id: str,
         study_id: str,
         series_UID: str,
@@ -77,7 +77,7 @@ def get_images_UID(
 
 
 def main():
-    print("Hello from learning-daemon-py!")
+    print("Hello from Learning-Varian-Daemon-with-Python!")
 
     # Create an Application Entity
     ae = AE("FM_SCU")  # User AE Title
@@ -98,11 +98,11 @@ def main():
             series_uid = get_series_UID(PATIENT_ID, STUDY_ID, assoc)
 
             for serie_uid in series_uid:
-                image_UIDs.update(get_images_UID(PATIENT_ID, STUDY_ID, serie_uid, assoc))
+                image_UIDs.update(get_image_UIDs(PATIENT_ID, STUDY_ID, serie_uid, assoc))
                 
             print(f"Number of image UIDs: {len(image_UIDs)}")
 
-        finally:
+        finally:  # Ensure the association is released
             assoc.release()
         
     else:

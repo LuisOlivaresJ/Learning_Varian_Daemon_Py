@@ -1,3 +1,7 @@
+"""
+A script to perform a C-FIND query to show how to request specific DICOM tags.
+"""
+
 import os
 
 from pynetdicom import AE, debug_logger
@@ -24,7 +28,7 @@ ds.StudyID = ""
 STUDY_ROOT_QR_FIND = "1.2.840.10008.5.1.4.1.2.2.1"
 
 def main():
-    print("Hello from learning-daemon-py!")
+    print("Hello from Learning-Varian-Daemon-with-Python!")
 
     # Create an Application Entity
     ae = AE("FM_SCU")  # User AE Title
@@ -40,20 +44,24 @@ def main():
     if assoc.is_established:
         print("Association established!")
 
-        responses = assoc.send_c_find(ds, STUDY_ROOT_QR_FIND)
-        for (status, identifier) in responses:
-            if status:
-                # Show status with hexadecimal representation
-                print(f"C-Find query status: 0x{status.Status:04x}")
-                print(identifier)
-            else:
-                print("Connection timed out, was aborted or received invalid response")
-            #break
-        assoc.release()
+        try:
+            responses = assoc.send_c_find(ds, STUDY_ROOT_QR_FIND)
+            for (status, identifier) in responses:
+                if status:
+                    # Show status with hexadecimal representation
+                    print(f"C-Find query status: 0x{status.Status:04x}")
+                    # Show the requested dateset tags
+                    print(identifier)
+
+                else:
+                    print("Connection timed out, was aborted or received invalid response")
+                #break
+
+        finally:  # Ensure the association is released, even if C-FIND fails
+            assoc.release()
 
     else:
         print("Association rejected, aborted or never connected")
-
 
 
 if __name__ == "__main__":
