@@ -4,7 +4,7 @@ This repository is dedicated to learn and explore the **Varian DICOM Service Dae
 
 ## Overview
 
-The Varian Daemon is a component of the Varian ecosystem that allow us to request data from the database, structuring according to the DICOM standar. This repository will use the python libraries **pydicom** and **pynetdicom** in order to: 
+The Varian Daemon is a component of the Varian ecosystem that allow us to request data from the database, according to the DICOM standar. This repository will use the python libraries **pydicom** and **pynetdicom** in order to: 
 
 - Understand how to set up a Client Application Entity.
 - Experiment with various services operations to request data.
