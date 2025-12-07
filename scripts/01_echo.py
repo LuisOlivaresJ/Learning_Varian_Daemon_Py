@@ -13,10 +13,12 @@ from dotenv import load_dotenv
 
 debug_logger()  # Enable debugging logs for pynetdicom
 
+# Load environment variables (AE Title, IP, Port)
 load_dotenv()  # This loads the variables from .env file
-VarianDB_IP = os.getenv("VARIAN_DB_IP")
 VarianDB_PORT = os.getenv("VARIAN_DB_PORT")
+VarianDB_IP = os.getenv("VARIAN_DB_IP")
 VarianDB_AET = os.getenv("VARIAN_DB_AET")
+
 
 # Varian Conformace Presentation Context
 VERIFICATION_CONTEXT = "1.2.840.10008.1.1"

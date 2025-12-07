@@ -7,24 +7,28 @@ from pydicom.dataset import Dataset
 from dotenv import load_dotenv
 
 #debug_logger()
+
+# Load environment variables (AE Title, IP, Port)
 load_dotenv()  # This loads the variables from .env file
-VarianDB_IP = os.getenv("VARIAN_DB_IP")
 VarianDB_PORT = os.getenv("VARIAN_DB_PORT")
 VarianDB_AET = os.getenv("VARIAN_DB_AET")
+VarianDB_IP = os.getenv("VARIAN_DB_IP")
+
 
 # Varian's Conformace Presentation Context
 STUDY_ROOT_QR_FIND = "1.2.840.10008.5.1.4.1.2.2.1"
 
 # Constant query's attributes (clinic specific)
 PATIENT_ID = "11111"
-STUDY_ID = "RapidArc QA Test"
+STUDY_ID = "RapidArc QA Test"  # This corresponds to the Course Name in Eclipse
 
 
-def get_series_UID(
+def get_series_UIDs(
         patient_id: str,
         study_id: str,
         assoc: Association
         ) -> set[str]:
+    """Helper function to get all Series Instance UIDs for a given patient and study."""
     
     # Create the identifier (query) dataset
     ds = Dataset()
@@ -33,13 +37,14 @@ def get_series_UID(
     ds.StudyID = study_id
     ds.SeriesInstanceUID = ""
 
+    # Send the C-FIND request
     responses = assoc.send_c_find(ds, STUDY_ROOT_QR_FIND)
-    series_UID = set()
+    series_UID = set()  # To hold unique series UIDs
     for (status, identifier) in responses:
         if '0xff00' == f"0x{status.Status:04x}":
             series_UID.add(identifier.SeriesInstanceUID)
         elif '0x0000' == f"0x{status.Status:04x}":
-            print("Getting series UID done!")
+            pass
         else:
             print("Connection timed out, was aborted or received invalid response")
 
@@ -49,18 +54,20 @@ def get_series_UID(
 def get_image_UIDs(
         patient_id: str,
         study_id: str,
-        series_UID: str,
+        serie_UID: str,
         assoc: Association
         ) -> set[str]:
+        """Helper function to get all Image SOP Instance UIDs for a given patient, study and serie."""
 
         # Create the identifier (query) dataset
         ds = Dataset()
         ds.QueryRetrieveLevel = "IMAGE"
         ds.PatientID = patient_id
         ds.StudyID = study_id
-        ds.SeriesInstanceUID = series_UID
+        ds.SeriesInstanceUID = serie_UID
         ds.SOPInstanceUID = ""
 
+        # Send the C-FIND request
         responses = assoc.send_c_find(ds, STUDY_ROOT_QR_FIND)
         image_UID = set()
         for (status, identifier) in responses:
@@ -93,9 +100,9 @@ def main():
     if assoc.is_established:
         print("Association established!")
 
-        image_UIDs = set()
+        image_UIDs = set()  # To hold all image unique Image UIDs
         try:
-            series_uid = get_series_UID(PATIENT_ID, STUDY_ID, assoc)
+            series_uid = get_series_UIDs(PATIENT_ID, STUDY_ID, assoc)
 
             for serie_uid in series_uid:
                 image_UIDs.update(get_image_UIDs(PATIENT_ID, STUDY_ID, serie_uid, assoc))

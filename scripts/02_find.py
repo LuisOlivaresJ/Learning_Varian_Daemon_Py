@@ -17,10 +17,12 @@ from pydicom.dataset import Dataset
 from dotenv import load_dotenv
 #debug_logger()
 
+# Load environment variables (AE Title, IP, Port)
 load_dotenv()  # This loads the variables from .env file
+VarianDB_AET = os.getenv("VARIAN_DB_AET")
 VarianDB_IP = os.getenv("VARIAN_DB_IP")
 VarianDB_PORT = os.getenv("VARIAN_DB_PORT")
-VarianDB_AET = os.getenv("VARIAN_DB_AET")
+
 
 # Create our Identifier (query) dataset. In this case, we will query for all studies
 # instancesUID that mathch Patient's Name "QC^IMRT"
