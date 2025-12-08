@@ -18,6 +18,9 @@ VarianDB_IP = os.getenv("VARIAN_DB_IP")
 # Varian's Conformace Presentation Context
 STUDY_ROOT_QR_FIND = "1.2.840.10008.5.1.4.1.2.2.1"
 
+# SOP Class UID
+RT_IMAGE_CLASS_UID = "1.2.840.10008.5.1.4.1.1.481.1"
+
 # Constant query's attributes (clinic specific)
 PATIENT_ID = "11111"
 STUDY_ID = "RapidArc QA Test"  # This corresponds to the Course Name in Eclipse
@@ -65,15 +68,18 @@ def get_image_UIDs(
         ds.PatientID = patient_id
         ds.StudyID = study_id
         ds.SeriesInstanceUID = serie_UID
+        ds.SOPClassUID = ""
         ds.SOPInstanceUID = ""
+        ds.ContentDate = "20250101-"  # Query dates starting on 2025 January 01
 
         # Send the C-FIND request
         responses = assoc.send_c_find(ds, STUDY_ROOT_QR_FIND)
         image_UID = set()
         for (status, identifier) in responses:
             if '0xff00' == f"0x{status.Status:04x}":
-                #print(identifier.SOPInstanceUID)
-                image_UID.add(identifier.SOPInstanceUID)
+                if identifier.SOPClassUID == RT_IMAGE_CLASS_UID:
+                    print(identifier.ContentDate)
+                    image_UID.add(identifier.SOPInstanceUID)
             elif '0x0000' == f"0x{status.Status:04x}":
                 pass
                 #print("Getting series UID done!")
