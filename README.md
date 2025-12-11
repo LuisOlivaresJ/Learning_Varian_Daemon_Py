@@ -1,12 +1,12 @@
-# Learning Varian Daemon with Python
+# Learning Varian DICOM DB Daemon with Python
 
-This repository is dedicated to learn and explore the **Varian DICOM Service Daemon**. It contains Python scripts and resources for understanding how to interact with and utilize the Varian Daemon functionality.
+This repository is dedicated to learn and explore the **Varian DICOM Daemon Service**. It contains Python scripts and resources for understanding how to interact with and utilize the Varian Daemon functionality.
 
 ## Overview
 
-The Varian Daemon is a component of the Varian ecosystem that allow us to request data from the database, according to the DICOM standar. This repository will use the python libraries **pydicom** and **pynetdicom** in order to: 
+The Varian Daemon is a component of the Varian ecosystem that allow us to request RT information that is stored in the Aria database. The purpose is to help to extract data according to the DICOM standar, for example, RT Images, RT Dose, CT Image Series, etc. This repository will use open-source Python libraries as **pydicom** and **pynetdicom** in order to: 
 
-- Understand how to set up a Client Application Entity.
+- Understand how to set up a Client Application Entity (client).
 - Experiment with various services operations to request data.
 - Provide example code and documentation.
 
