@@ -26,3 +26,14 @@ The Varian Daemon is a component of the Varian ecosystem that allow us to reques
 - Pianykh, O. S. (2012). Digital imaging and communications in medicine (DICOM) a practical introduction and survival guide. Berlin, Heidelberg: Springer Berlin Heidelberg.
 
 ---
+
+### 1.1 Client-side Configuration
+To make requests to the Daemon, we can use any computer that is on the network. In this repository we will use a PC running Ubuntu 24.04 LTS. To install and manage Python packages, we will use the [uv](https://docs.astral.sh/uv/) package.
+
+To connect two computers according to the DICOM protocol, the application that will make the queries (the client) must have the following:
+
+- *Application Entity Title* (AET). We will use **FM_SCU**
+- *IP Address*, which is the address of our PC on the network. We will use the address **192.168.1.1**
+
+### 1.2 Provider-side Configuration
+We access the server that contains the database remotely.

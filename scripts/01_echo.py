@@ -20,7 +20,7 @@ VarianDB_IP = os.getenv("VARIAN_DB_IP")
 VarianDB_AET = os.getenv("VARIAN_DB_AET")
 
 
-# Varian Conformace Presentation Context
+# Presentation Context
 VERIFICATION_CONTEXT = "1.2.840.10008.1.1"
 
 
