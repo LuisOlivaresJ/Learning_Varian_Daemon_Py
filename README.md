@@ -13,6 +13,8 @@ The Varian Daemon is a component of the Varian ecosystem that allow us to reques
 ## Repository Structure
 
 ### Scripts folder
+
+- `00_setup.md` Provides step-by-step instructions to configure the Varian Daemon Service.
 - `01_echo.py` Implements a C-ECHO request to verify connectivity with the Varian Daemon.
 - `02_find.py` Demonstrates how to perform a C-FIND request to search for studies.
 - `03_get.py` (TODO) Shows how to execute a C-GET request to retrieve images 
@@ -26,14 +28,3 @@ The Varian Daemon is a component of the Varian ecosystem that allow us to reques
 - Pianykh, O. S. (2012). Digital imaging and communications in medicine (DICOM) a practical introduction and survival guide. Berlin, Heidelberg: Springer Berlin Heidelberg.
 
 ---
-
-### 1.1 Client-side Configuration
-To make requests to the Daemon, we can use any computer that is on the network. In this repository we will use a PC running Ubuntu 24.04 LTS. To install and manage Python packages, we will use the [uv](https://docs.astral.sh/uv/) package.
-
-To connect two computers according to the DICOM protocol, the application that will make the queries (the client) must have the following:
-
-- *Application Entity Title* (AET). We will use **FM_SCU**
-- *IP Address*, which is the address of our PC on the network. We will use the address **192.168.1.1**
-
-### 1.2 Provider-side Configuration
-We access the server that contains the database remotely.
