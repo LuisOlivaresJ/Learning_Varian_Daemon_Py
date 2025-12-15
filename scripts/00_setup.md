@@ -8,6 +8,14 @@ To connect two computers according to the DICOM protocol, the application that w
 - *Application Entity Title* (AET). We will use **FM_SCU**
 - *IP Address*, which is the address of our PC on the network. We will use the address **192.168.1.1**
 
+Inside the root folder of this respository, create a file named `.env` and add the following variables:
+
+```
+DAEMON_AE_TITLE="FM_DAEMON"
+DAEMON_IP="YOUR_DAEMON_IP_ADDRESS"
+DAEMON_PORT="51402"
+```
+
 ## 1.2 Provider-side Configuration
 
 > [!NOTE]
