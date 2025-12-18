@@ -15,11 +15,12 @@ VarianDB_AET = os.getenv("VARIAN_DB_AET")
 VarianDB_IP = os.getenv("VARIAN_DB_IP")
 
 
-# Varian's Conformace Presentation Context
+# Presentation Context
+## Study Root Query/Retrieve Find
 STUDY_ROOT_QR_FIND = "1.2.840.10008.5.1.4.1.2.2.1"
-
-# SOP Class UID
+## SOP Class UID
 RT_IMAGE_CLASS_UID = "1.2.840.10008.5.1.4.1.1.481.1"
+
 
 # Constant query's attributes (clinic specific)
 PATIENT_ID = "11111"
@@ -31,7 +32,12 @@ def get_series_UIDs(
         study_id: str,
         assoc: Association
         ) -> set[str]:
-    """Helper function to get all Series Instance UIDs for a given patient and study."""
+    """
+    Helper function to get all Series Instance UIDs for a given patient and study.
+
+    Returns:
+        set[str]: A set of Series Instance UIDs.
+    """
     
     # Create the identifier (query) dataset
     ds = Dataset()
@@ -60,7 +66,12 @@ def get_image_UIDs(
         serie_UID: str,
         assoc: Association
         ) -> set[str]:
-        """Helper function to get all Image SOP Instance UIDs for a given patient, study and serie."""
+        """
+        Helper function to get all Image SOP Instance UIDs for a given patient, study and serie.
+
+        Returns:
+            set[str]: A set of Image SOP Instance UIDs.
+        """
 
         # Create the identifier (query) dataset
         ds = Dataset()
@@ -70,23 +81,24 @@ def get_image_UIDs(
         ds.SeriesInstanceUID = serie_UID
         ds.SOPClassUID = ""
         ds.SOPInstanceUID = ""
-        ds.ContentDate = "20250101-"  # Query dates starting on 2025 January 01
+        ds.ContentDate = "20251101-"  # Query dates starting on 2025 January 01
 
         # Send the C-FIND request
         responses = assoc.send_c_find(ds, STUDY_ROOT_QR_FIND)
-        image_UID = set()
+        image_UIDs = set()
         for (status, identifier) in responses:
             if '0xff00' == f"0x{status.Status:04x}":
+                # If RT_Image, store the SOP Instance UID
                 if identifier.SOPClassUID == RT_IMAGE_CLASS_UID:
-                    print(identifier.ContentDate)
-                    image_UID.add(identifier.SOPInstanceUID)
+                    print(f"ContentDate: {identifier.ContentDate}")
+                    image_UIDs.add(identifier.SOPInstanceUID)
             elif '0x0000' == f"0x{status.Status:04x}":
                 pass
                 #print("Getting series UID done!")
             else:
                 print("Connection timed out, was aborted or received invalid response")
 
-        return image_UID
+        return image_UIDs
 
 
 def main():
@@ -94,7 +106,10 @@ def main():
 
     # Create an Application Entity
     ae = AE("FM_SCU")  # User AE Title
+
+    # Add a requested presentation contexts
     ae.add_requested_context(STUDY_ROOT_QR_FIND)
+    ae.add_requested_context(RT_IMAGE_CLASS_UID)
 
     # Create an association with Varian DB
     assoc = ae.associate(
@@ -108,9 +123,9 @@ def main():
 
         image_UIDs = set()  # To hold all image unique Image UIDs
         try:
-            series_uid = get_series_UIDs(PATIENT_ID, STUDY_ID, assoc)
+            serie_uids = get_series_UIDs(PATIENT_ID, STUDY_ID, assoc)
 
-            for serie_uid in series_uid:
+            for serie_uid in serie_uids:
                 image_UIDs.update(get_image_UIDs(PATIENT_ID, STUDY_ID, serie_uid, assoc))
                 
             print(f"Number of image UIDs: {len(image_UIDs)}")
