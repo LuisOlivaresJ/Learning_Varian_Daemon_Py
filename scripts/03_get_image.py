@@ -15,11 +15,14 @@ VarianDB_AET = os.getenv("VARIAN_DB_AET")
 VarianDB_IP = os.getenv("VARIAN_DB_IP")
 
 
-# Presentation Context
+# SOP Classes used in Presentation Context
 ## Study Root Query/Retrieve Find
 STUDY_ROOT_QR_FIND = "1.2.840.10008.5.1.4.1.2.2.1"
 ## SOP Class UID
 RT_IMAGE_CLASS_UID = "1.2.840.10008.5.1.4.1.1.481.1"
+
+
+MY_AET = "FM_SCU"  # My AE Title
 
 
 # Constant query's attributes (clinic specific)
@@ -64,10 +67,18 @@ def get_image_UIDs(
         patient_id: str,
         study_id: str,
         serie_UID: str,
+        date: str,
         assoc: Association
         ) -> set[str]:
         """
         Helper function to get all Image SOP Instance UIDs for a given patient, study and serie.
+
+        Args:
+            patient_id (str): The patient ID.
+            study_id (str): The study ID.
+            serie_UID (str): The series instance UID.
+            date (str): The date to query. Should be a valid matching format according to DICOM standards 
+                (e.g., "20250102-" for dates starting on 2025 January 02). See DICOM Standard PS3.4 Section C.2.2.2 Attribute Matching for details.
 
         Returns:
             set[str]: A set of Image SOP Instance UIDs.
@@ -81,7 +92,7 @@ def get_image_UIDs(
         ds.SeriesInstanceUID = serie_UID
         ds.SOPClassUID = ""
         ds.SOPInstanceUID = ""
-        ds.ContentDate = "20251101-"  # Query dates starting on 2025 January 01
+        ds.ContentDate = date  # Query dates starting on 2025 January 01
 
         # Send the C-FIND request
         responses = assoc.send_c_find(ds, STUDY_ROOT_QR_FIND)
@@ -105,11 +116,8 @@ def main():
     print("Hello from Learning-Varian-Daemon-with-Python!")
 
     # Create an Application Entity
-    ae = AE("FM_SCU")  # User AE Title
-
-    # Add a requested presentation contexts
+    ae = AE(MY_AET)  # User AE Title
     ae.add_requested_context(STUDY_ROOT_QR_FIND)
-    ae.add_requested_context(RT_IMAGE_CLASS_UID)
 
     # Create an association with Varian DB
     assoc = ae.associate(
@@ -126,7 +134,7 @@ def main():
             serie_uids = get_series_UIDs(PATIENT_ID, STUDY_ID, assoc)
 
             for serie_uid in serie_uids:
-                image_UIDs.update(get_image_UIDs(PATIENT_ID, STUDY_ID, serie_uid, assoc))
+                image_UIDs.update(get_image_UIDs(PATIENT_ID, STUDY_ID, serie_uid, "20251101-", assoc))
                 
             print(f"Number of image UIDs: {len(image_UIDs)}")
 
