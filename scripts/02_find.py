@@ -1,5 +1,6 @@
 """
-A script to perform a C-FIND query to show how to request for specific DICOM tags.
+A script to perform a C-FIND query to show how to request for sudies attributes (Study ID, Study Date and Study UID)
+for a specific patient.
 
 Reference:
 Eclipse 18.1 DICOM Conformance Statement
@@ -15,35 +16,45 @@ from pynetdicom.sop_class import SOPClass
 from pydicom.dataset import Dataset
 
 from dotenv import load_dotenv
-#debug_logger()
 
-# Load environment variables (AE Title, IP, Port)
+
+debug_logger()  # Enable debugging logs for pynetdicom
+
+
+# VARIAN Application Entity details
+## Load environment variables (AE Title, IP, Port)
 load_dotenv()  # This loads the variables from .env file
 VarianDB_AET = os.getenv("VARIAN_DB_AET")
 VarianDB_IP = os.getenv("VARIAN_DB_IP")
 VarianDB_PORT = os.getenv("VARIAN_DB_PORT")
 
 
-# Create our Identifier (query) dataset. In this case, we will query for all studies
-# instancesUID that mathch Patient's Name "QC^IMRT"
+MY_AET = "FM_SCU"  # My AE Title
+
+
+# Create our query as a dataset. In this case, we will query for all studies
+# instancesUID that mathch Patient's Name tag  as "QC^IMRT"
 ds = Dataset()
 ds.PatientName = "QC^IMRT"
 ds.QueryRetrieveLevel = "STUDY"
+# The next three attributes are to be returned in the C-FIND response
 ds.StudyInstanceUID = ""
 ds.StudyDate = ""
 ds.StudyID = ""
 
-# Varian's Conformace Presentation Context
+
+# SOP Class used in Presentation Context
 STUDY_ROOT_QR_FIND = "1.2.840.10008.5.1.4.1.2.2.1"
+
 
 def main():
     print("Hello from Learning-Varian-Daemon-with-Python!")
 
     # Create an Application Entity
-    ae = AE("FM_SCU")  # User AE Title
+    ae = AE(MY_AET)  # User AE Title
     ae.add_requested_context(STUDY_ROOT_QR_FIND)
 
-    # Create an association with Varian DB
+    # Create an association with Varian DB Service Application Entity
     assoc = ae.associate(
         addr = VarianDB_IP,
         port = int(VarianDB_PORT),
@@ -59,12 +70,12 @@ def main():
                 if status:
                     # Show status with hexadecimal representation
                     print(f"C-Find query status: 0x{status.Status:04x}")
-                    # Show the requested dateset tags
-                    print(identifier)
+                    # Show the requested query
+                    print(identifier)  # A pydicom Dataset
 
                 else:
                     print("Connection timed out, was aborted or received invalid response")
-                #break
+                #break  # Uncomment to show only first response
 
         finally:  # Ensure the association is released, even if C-FIND fails
             assoc.release()
