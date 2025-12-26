@@ -4,7 +4,9 @@ This repository is dedicated to learn and explore the **Varian DICOM Daemon Serv
 
 ## Overview
 
-The Varian Daemon is a component of the Varian ecosystem that allow us to request RT information that is stored in the Aria database. The purpose is to help to extract data according to the DICOM standar, for example, RT Images, RT Dose, CT Image Series, etc. This repository will use open-source Python libraries as **pydicom** and **pynetdicom** in order to: 
+The Varian Daemon is a component of the Varian ecosystem that allow us to request RT information that is stored in the Aria database. The purpose is to help to extract data according to the DICOM standar, for example, RT Images, RT Dose, CT Image Series, etc. 
+
+This repository will use open-source Python libraries as **pydicom** and **pynetdicom** in order to: 
 
 - Understand how to set up a Client Application Entity (client).
 - Experiment with various services operations to request data.
@@ -16,7 +18,7 @@ The Varian Daemon is a component of the Varian ecosystem that allow us to reques
 
 - `00_setup.md` Provides step-by-step instructions to configure the Varian Daemon Service.
 - `01_echo.py` Implements a C-ECHO request to verify connectivity with the Varian Daemon.
-- `02_find.py` Demonstrates how to perform a C-FIND request to search for studies.
+- `02_find.py` Demonstrates how to perform a C-FIND request to search for studies for a given patient.
 - `03_get.py` (TODO) Shows how to execute a C-GET request to retrieve images 
 
 ## Learning Resources

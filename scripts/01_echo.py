@@ -11,16 +11,22 @@ from pydicom.dataset import Dataset
 
 from dotenv import load_dotenv
 
+
 debug_logger()  # Enable debugging logs for pynetdicom
 
-# Load environment variables (AE Title, IP, Port)
+
+# VARIAN Application Entity details
+## Load environment variables (AE Title, IP, Port)
 load_dotenv()  # This loads the variables from .env file
 VarianDB_PORT = os.getenv("VARIAN_DB_PORT")
 VarianDB_IP = os.getenv("VARIAN_DB_IP")
 VarianDB_AET = os.getenv("VARIAN_DB_AET")
 
 
-# Presentation Context
+MY_AET = "FM_SCU"  # My AE Title
+
+
+# SOP Class used in Presentation Context
 VERIFICATION_CONTEXT = "1.2.840.10008.1.1"
 
 
@@ -28,7 +34,7 @@ def main():
     print("Hello from Learning-Varian-Daemon-with-Python!")
 
     # Create an Application Entity
-    ae = AE("FM_SCU")  # User AE Title
+    ae = AE(MY_AET)  # User AE Title
     ae.add_requested_context(VERIFICATION_CONTEXT)
 
     # Create an association with Varian DB
