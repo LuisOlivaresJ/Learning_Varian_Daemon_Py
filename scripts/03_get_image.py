@@ -40,7 +40,6 @@ def get_series_UIDs(
         patient_id: str,
         study_id: str,
         assoc: Association,
-        date: str = "19910318-",  # Query dates starting on 1991 March 18 TODO
         ) -> set[str]:
     """
     Helper function to get all Series Instance UIDs for a given patient and study.
@@ -57,7 +56,6 @@ def get_series_UIDs(
 
     # We are interested only in RT Images
     ds.Modality = "RTIMAGE"
-    #ds.ContentDate = date TODO It is not suported in SERIES level
 
     ds.SeriesInstanceUID = ""
 
@@ -173,7 +171,7 @@ def main():
         #image_UIDs = set()  # To hold all image unique Image UIDs
         try:
             # FIND
-            serie_uids = get_series_UIDs(PATIENT_ID, STUDY_ID, assoc, date="20251101-")
+            serie_uids = get_series_UIDs(PATIENT_ID, STUDY_ID, assoc)
 
             """ for serie_uid in serie_uids:
                 image_UIDs.update(get_image_UIDs(PATIENT_ID, STUDY_ID, serie_uid, "20251101-", assoc))
@@ -184,12 +182,13 @@ def main():
             # MOVE
             for serie_uid in serie_uids:
 
-                # Create the query dataset and send the C-MOVE request
+                # Create dataset and send the C-MOVE request
                 ds = Dataset()
                 ds.QueryRetrieveLevel = "SERIES"
                 ds.PatientID = PATIENT_ID
                 ds.StudyID = STUDY_ID
                 ds.SeriesInstanceUID = serie_uid
+                ds.ContentDate = "20251120"  # Create the request only for images taken on 2025 November 20
 
                 if assoc.is_established:
                     print(f"Requesting C-MOVE for SeriesInstanceUID: {serie_uid}")
