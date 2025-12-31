@@ -1,12 +1,15 @@
 # Setting up
 
 ## 1.1 Client-side Configuration
-To make requests to the Daemon, we can use any computer that is on the network. In this repository we will use a PC running Ubuntu 24.04 LTS. To install and manage Python packages, we will use the [uv](https://docs.astral.sh/uv/) package.
+To make requests to the Daemon, we can use any computer that is on the network. In this repository we will use a PC running Ubuntu 24.04 LTS. To install and manage Python packages, we will use [uv](https://docs.astral.sh/uv/).
 
 To connect two computers according to the DICOM protocol, the application that will make the queries (the client) must have the following:
 
-- *Application Entity Title* (AET). We will use **FM_SCU**
-- *IP Address*, which is the address of our PC on the network. We will use the address **192.168.1.1**
+- *Application Entity Title* (AET). This can be any title. We will use **FM_SCU**
+- *IP Address*, this is the address of our PC on the network. We will use the address **192.168.1.1**
+
+> [!TIP]
+> In programming it is a good practice to avoid hardcoding sensitive information such as IP addresses, ports, and AE Titles directly into the code. Instead, we can use environment variables to store this information securely and access it within our scripts.
 
 Inside the root folder of this respository, create a file named `.env` and add the following variables:
 
@@ -14,14 +17,24 @@ Inside the root folder of this respository, create a file named `.env` and add t
 DAEMON_AE_TITLE="FM_DAEMON"
 DAEMON_IP="YOUR_DAEMON_IP_ADDRESS"
 DAEMON_PORT="51402"
+
+PYNETDICOM_AE_TITLE="FM_SCU"
+PYNETDICOM_IP="192.168.1.1"
+PYNETDICOM_PORT="12999"
 ```
 
+> [!NOTE]
+> Replace `YOUR_DAEMON_IP_ADDRESS` and `192.168.1.1` with the actual IP addresses of the Daemon server and the Python client respectively. More about this below.
+
 ## 1.2 Provider-side Configuration
+
+> [!WARNING]
+> Wrong configurations on the server may lead to connectivity issues. Please ensure you have the necessary permissions and follow the steps carefully.
 
 > [!NOTE]
 > In this example we are working with Eclipse v16.0
 
-We need to access the server that contains the database.
+We need to access the server that contains the database. You can use Remote Desktop Connection to connect to the server. Use the credentials provided by your network administrator.
 
 ![RemoteConection](../assets/001RemoteDesktopDB.png)
 

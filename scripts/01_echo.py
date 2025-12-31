@@ -1,6 +1,11 @@
 """
 01_echo.py
 This script implements a C-ECHO request to verify connectivity with the Varian Daemon.
+
+Before the script can be run, ensure that the following environment variables are set in a .env file:
+- VARIAN_DB_AET: The AE Title of the Varian Daemon
+- VARIAN_DB_IP: The IP address of the Varian Daemon
+- VARIAN_DB_PORT: The port number of the Varian Daemon
 """
 
 

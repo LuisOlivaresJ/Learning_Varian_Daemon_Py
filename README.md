@@ -9,8 +9,8 @@ The Varian Daemon is a component of the Varian ecosystem that allow us to reques
 This repository will use open-source Python libraries as **pydicom** and **pynetdicom** in order to: 
 
 - Understand how to set up a Client Application Entity (client).
-- Experiment with various services operations to request data.
-- Provide example code and documentation.
+- Experiment with services (C-FIND and C-MOVE) to request data.
+- Provide example code.
 
 ## Repository Structure
 
@@ -19,7 +19,7 @@ This repository will use open-source Python libraries as **pydicom** and **pynet
 - `00_setup.md` Provides step-by-step instructions to configure the Varian Daemon Service.
 - `01_echo.py` Implements a C-ECHO request to verify connectivity with the Varian Daemon.
 - `02_find.py` Demonstrates how to perform a C-FIND request to search for studies for a given patient.
-- `03_get.py` (TODO) Shows how to execute a C-GET request to retrieve images 
+- `03_get.py` (In progress) Shows how to execute a C-MOVE request to retrieve images.
 
 ## Learning Resources
 

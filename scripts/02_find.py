@@ -1,5 +1,5 @@
 """
-A script to perform a C-FIND query to show how to request for sudies attributes (Study ID, Study Date and Study UID)
+A script to perform a C-FIND query to show how to request for Study Level (Study ID, Study Date and Study UID)
 for a specific patient.
 
 Reference:
