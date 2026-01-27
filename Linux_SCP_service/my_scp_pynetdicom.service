@@ -1,0 +1,11 @@
+[Unit]
+Description=My SCP using pynetdicom
+After=network.target
+
+[Service]
+WorkingDirectory=/home/luis/FM/Learning_Varian_Daemon_Py/
+ExecStart=/home/luis/FM/Learning_Varian_Daemon_Py/.venv/bin/python3 /home/luis/FM/Learning_Varian_Daemon_Py/scripts/03_service_class_provider.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
