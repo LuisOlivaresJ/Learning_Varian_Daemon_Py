@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from pynetdicom import AE, debug_logger, Association, build_role, evt, build_context
+from pynetdicom import AE, debug_logger, Association, evt, build_context
 
 from pydicom.dataset import Dataset
 
@@ -20,6 +20,8 @@ VarianDB_IP = os.getenv("VARIAN_DB_IP")
 PyNETDICOM_IP = os.getenv("PYNETDICOM_IP")
 PyNETDICOM_AET = os.getenv("PYNETDICOM_AET")
 PyNETDICOM_PORT = os.getenv("PYNETDICOM_PORT")
+
+SCP_AET = os.getenv("PyNetDICOM_SCP_IP_AET")
 
 
 # SOP Classes used in Presentation Context
@@ -122,21 +124,6 @@ def get_image_UIDs(
         return image_UIDs
 
 
-# Implement the handler for evt.EVT_C_STORE
-def handle_store(event):
-    """Handle a C-STORE request event."""
-    ds = event.dataset
-    ds.file_meta = event.file_meta
-
-    # Save the dataset using the SOP Instance UID as the filename
-    path_to_save = Path("/home/luis/FM/testing_DICOM_C-MOVE") / ds.SOPInstanceUID
-    ds.save_as(path_to_save, enforce_file_format=True)
-
-    # Return a 'Success' status
-    return 0x0000
-
-handlers = [(evt.EVT_C_STORE, handle_store)]
-
 
 def main():
     print("Hello from Learning-Varian-Daemon-with-Python!")
@@ -157,13 +144,6 @@ def main():
         ae_title = VarianDB_AET,
     )
 
-    # Start our Storage SCP in non-blocking mode
-    scp = ae.start_server(
-        address=(PyNETDICOM_IP, int(PyNETDICOM_PORT)),
-        block=False,
-        evt_handlers=handlers,
-        contexts=contexts,
-    )
 
     if assoc.is_established:
         print("Association established!")
@@ -194,7 +174,7 @@ def main():
                     print(f"Requesting C-MOVE for SeriesInstanceUID: {serie_uid}")
                     responses = assoc.send_c_move(
                         ds,
-                        PyNETDICOM_AET,
+                        SCP_AET,  # Our storage service class provider (see 03_scp.py)
                         STUDY_ROOT_QR_MOVE
                     )
                     for (status, identifier) in responses:
@@ -209,8 +189,6 @@ def main():
     else:
         print("Association rejected, aborted or never connected")
 
-    # Stop the SCP
-    scp.shutdown()
 
 if __name__ == "__main__":
     main()
