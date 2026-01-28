@@ -59,6 +59,14 @@ Add a new *Trusted Application Entity* with the client information we have defin
 
 ![PythonClient](../assets/005PythonClient.png)
 
+### Add a storage SCP
+
+Add another *Trusted Application Entity*. This will be our Storage Service Class Provider, SCP (the computer that will store our images).
+
+- AE Title: FM_SCP
+- IP: 192.168.1.1
+- Port: 12998
+
 On the DICOM Service Configuration window, click  on the green arrow icon to start the service.
 
 ![StartService](../assets/006StartTheService.png)

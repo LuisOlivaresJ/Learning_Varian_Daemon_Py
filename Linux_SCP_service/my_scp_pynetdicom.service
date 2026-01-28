@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/home/luis/FM/Learning_Varian_Daemon_Py/
-ExecStart=/home/luis/FM/Learning_Varian_Daemon_Py/.venv/bin/python3 /home/luis/FM/Learning_Varian_Daemon_Py/scripts/03_service_class_provider.py
+ExecStart=/home/luis/FM/Learning_Varian_Daemon_Py/.venv/bin/python3 /home/luis/FM/Learning_Varian_Daemon_Py/scripts/03_storage_scp.py
 Restart=on-failure
 
 [Install]
